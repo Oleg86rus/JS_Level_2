@@ -1,9 +1,11 @@
-function initCatalog() {
-    const catalog = {
-        items: [],
-        container: null,
-        basket: null,
-        url: 'https://raw.githubusercontent.com/kellolo/static/master/JSON/catalog.json',
+class Catalog {
+    constructor(item){
+        this.items = []
+        this.container = null
+        this.basket = null
+        this.url = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/catalog.json'
+        this.init();
+    }
         init(basket) {
             this.container = document.querySelector('#catalog');
             this.basket = basket;
@@ -15,19 +17,19 @@ function initCatalog() {
                 this._render();
                 this._handleEvents();
             });
-        },
+        }
 
         _get(url) {
             return fetch(url).then(d => d.json()); //сделает запрос за джейсоном, дождется ответа и преобразует джейсон в объект, который вернется из данного метода
-        },
+        }
         _render() {
             let htmlStr = '';
 
             this.items.forEach((item, i) => {
-                htmlStr += renderCatalogTemplate(item, i);
+                htmlStr += new CatalogItem(item).render();
             });
             this.container.innerHTML = htmlStr;
-        },
+        }
 
         _handleEvents() {
             this.container.addEventListener('click', event => {
@@ -39,32 +41,34 @@ function initCatalog() {
                 }
             });
         }
-    };
-
-    return catalog;
 }
 
-function renderCatalogTemplate(item, i) {
+class CatalogItem {
+    constructor(item) {
+        this.item = item;
+    }
+    render() {
     return `
         <div class="featuredItem">
             <div class="featuredImgWrap">
                 <div class="featuredBuy">
                     <button 
                         name="add"
-                        data-id="${item.productId}"
+                        data-id="${this.item.productId}"
                     >
                         <img src="../src/assets/images/addToCart.png" alt="">
                         Add to Cart
                     </button>
                 </div>
-                <img class="featuredProduct" src="${item.productImg}" alt="">
+                <img class="featuredProduct" src="${this.item.productImg}" alt="">
             </div>
             <div class="featuredNameAndPrice">
                 <div class="featuredItemName">
-                    ${item.productName}
+                    ${this.item.productName}
                 </div>
-                <div class="featuredItemPrice">$${item.productPrice}</div>
+                <div class="featuredItemPrice">$${this.item.productPrice}</div>
             </div>
         </div>
     `
+    }
 }
