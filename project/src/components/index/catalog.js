@@ -2,7 +2,7 @@ class Catalog {
     constructor(item){
         this.items = []
         this.container = null
-        this.basket = null
+        this.basket = basket
         this.url = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/catalog.json'
         this.init();
     }
@@ -26,7 +26,7 @@ class Catalog {
             let htmlStr = '';
 
             this.items.forEach((item, i) => {
-                htmlStr += new CatalogItem(item).render();
+                htmlStr += new CatalogItem(item, i).render();
             });
             this.container.innerHTML = htmlStr;
         }
@@ -37,7 +37,7 @@ class Catalog {
                     // console.log('КУПЛЕНО!')
                     let id = event.target.dataset.id; //from data-id
                     let item = this.items.find(el => el.productId == id);
-                    this.basket.add(item);
+                    this.basket.add(item);     // ЗДЕСЬ ВЫДАЕТ ОШИБКУ, ЧТО НЕ МОЖЕТ ПРОЧИТАТЬ add. Не понимаю, объясните пожалуйста.
                 }
             });
         }
@@ -48,27 +48,27 @@ class CatalogItem {
         this.item = item;
     }
     render() {
-    return `
-        <div class="featuredItem">
-            <div class="featuredImgWrap">
-                <div class="featuredBuy">
-                    <button 
-                        name="add"
-                        data-id="${this.item.productId}"
-                    >
-                        <img src="../src/assets/images/addToCart.png" alt="">
-                        Add to Cart
-                    </button>
+        return `
+            <div class="featuredItem">
+                <div class="featuredImgWrap">
+                    <div class="featuredBuy">
+                        <button 
+                            name="add"
+                            data-id="${this.item.productId}"
+                        >
+                            <img src="../src/assets/images/addToCart.png" alt="">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <img class="featuredProduct" src="${this.item.productImg}" alt="">
                 </div>
-                <img class="featuredProduct" src="${this.item.productImg}" alt="">
-            </div>
-            <div class="featuredNameAndPrice">
-                <div class="featuredItemName">
-                    ${this.item.productName}
+                <div class="featuredNameAndPrice">
+                    <div class="featuredItemName">
+                        ${this.item.productName}
+                    </div>
+                    <div class="featuredItemPrice">$${this.item.productPrice}</div>
                 </div>
-                <div class="featuredItemPrice">$${this.item.productPrice}</div>
             </div>
-        </div>
-    `
+        `
     }
 }
