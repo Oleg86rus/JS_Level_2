@@ -3,6 +3,8 @@ class Basket {
         this.items = [];
         this.total = null;
         this.url = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/basket.json';
+        this.addUrl = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/addToBasket.json';
+        this.removeUrl = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/deleteFromBasket.json';
         this.container = null; // basket-items
         this.wrapper = null; //basket all
         this.sum = 0;
@@ -16,8 +18,7 @@ class Basket {
                 this.totalContainer = document.querySelector('#basket-sum');
                 
                 //async
-                this._get(this.url)
-                .then(basket => {
+                this._get(this.url).then((basket) => {
                     this.items = basket.content;
                     this._render();
                     this._handleEvents();
@@ -43,16 +44,37 @@ class Basket {
 
                 this.totalContainer.innerText = this.sum;
             }
-            add(item) {
-            let find = this.items.find(el => item.productId == el.productId);
-
-            if(find) {
-                find.amount++;
-            } else {
-                this.items.push(Object.assign({}, item, { amount: 1 }));
+            _addToBasket() {
+                this.url = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json';
+                this._get(this.url)
+                    .then(result => {
+                        this.quantity = result;
+                        console.log('addGoods = ' + this.quantity.result);
+                    });
+        
+                 this._getBasket(); // вызов для примера
             }
+            add(item) {
+                // fetch(this.addUrl, {
+                //     method: "post",
+                //     body: JSON.stringify(item),
+                // }).finally(() =>
+                //     this._get(this.url).then((basket) => {
+                //         this.items = basket.content;
+                //         this._render;
+                //     })
+                // )
+                
+                let find = this.items.find(el => item.productId == el.productId);
 
-            this._render();
+                if(find) {
+                    find.amount++;
+                    this._addToBasket();
+                } else {
+                    this.items.push(Object.assign({}, item, { amount: 1 }));
+                }
+
+                this._render();
             }
             _remove(id) {
                 let find = this.items.find(el => el.productId == id);
@@ -70,9 +92,20 @@ class Basket {
                 document.querySelector('#basket-btn').addEventListener('click', e => {
                     this.wrapper.classList.toggle('hidden');
                 });
+                document.addEventListener("click", (event) => {
+                    if (
+                      event.target.offsetParent?.id != "basket-inner" &&
+                      event.target.id != "basket-btn" &&
+                      this.wrapper.classList != "hidden" &&
+                      event.target.name !== "remove"
+                    ) {
+                      this.wrapper.classList.toggle("hidden");
+                    }
+                  });
 
                 this.container.addEventListener('click', event => {
-                    if(event.target.name == 'remove') {
+                    if(event.target.name == 'remove'
+                    ) {
                         this._remove(event.target.dataset.id);
                     }
                 });

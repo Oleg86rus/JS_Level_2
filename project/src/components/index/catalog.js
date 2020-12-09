@@ -12,11 +12,11 @@ class Catalog {
 
             //async
             this._get(this.url)
-            .then(catalog => {
-                this.items = catalog;
-                this._render();
-                this._handleEvents();
-            });
+                .then(catalog => {
+                    this.items = catalog;
+                    this._render();
+                    this._handleEvents();
+                });
         }
 
         _get(url) {
@@ -25,8 +25,8 @@ class Catalog {
         _render() {
             let htmlStr = '';
 
-            this.items.forEach((item, i) => {
-                htmlStr += new CatalogItem(item, i).render();
+            this.items.forEach((item) => {
+                htmlStr += this._CatalogItem(item);
             });
             this.container.innerHTML = htmlStr;
         }
@@ -41,34 +41,30 @@ class Catalog {
                 }
             });
         }
-}
 
-class CatalogItem {
-    constructor(item) {
-        this.item = item;
-    }
-    render() {
-        return `
-            <div class="featuredItem">
-                <div class="featuredImgWrap">
-                    <div class="featuredBuy">
-                        <button 
-                            name="add"
-                            data-id="${this.item.productId}"
-                        >
-                            <img src="../src/assets/images/addToCart.png" alt="">
-                            Add to Cart
-                        </button>
+
+    _CatalogItem (item) {
+            return `
+                <div class="featuredItem">
+                    <div class="featuredImgWrap">
+                        <div class="featuredBuy">
+                            <button 
+                                name="add"
+                                data-id="${item.productId}"
+                            >
+                                <img src="../src/assets/images/addToCart.png" alt="">
+                                Add to Cart
+                            </button>
+                        </div>
+                        <img class="featuredProduct" src="${item.productImg}" alt="">
                     </div>
-                    <img class="featuredProduct" src="${this.item.productImg}" alt="">
-                </div>
-                <div class="featuredNameAndPrice">
-                    <div class="featuredItemName">
-                        ${this.item.productName}
+                    <div class="featuredNameAndPrice">
+                        <div class="featuredItemName">
+                            ${item.productName}
+                        </div>
+                        <div class="featuredItemPrice">$${item.productPrice}</div>
                     </div>
-                    <div class="featuredItemPrice">$${this.item.productPrice}</div>
                 </div>
-            </div>
-        `
-    }
+            `
+        }
 }
