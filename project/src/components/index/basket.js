@@ -8,8 +8,9 @@ class Basket {
         this.container = null; // basket-items
         this.wrapper = null; //basket all
         this.sum = 0;
+        this.num = 0;
         this.totalContainer = null;
-        this.init();
+        this.init(item);
     }
 
             init() {
@@ -38,11 +39,14 @@ class Basket {
             }
             _calcSum() {
                 this.sum = 0;
+                this.num = 0;
                 this.items.forEach(item => {
                     this.sum += item.amount * item.productPrice;
+                    this.num += item.amount;
                 });
 
                 this.totalContainer.innerText = this.sum;
+                num.innerText = this.num;
             }
             _addToBasket() {
                 this.url = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json';
@@ -52,7 +56,7 @@ class Basket {
                         console.log('addGoods = ' + this.quantity.result);
                     });
         
-                 this._getBasket(); // вызов для примера
+                //  this._getBasket(); // вызов для примера
             }
             add(item) {
                 // fetch(this.addUrl, {

@@ -1,10 +1,10 @@
 class Catalog {
-    constructor(item){
+    constructor(basket){
         this.items = []
         this.container = null
         this.basket = basket
         this.url = 'https://raw.githubusercontent.com/kellolo/static/master/JSON/catalog.json'
-        this.init();
+        this.init(basket);
     }
         init(basket) {
             this.container = document.querySelector('#catalog');
